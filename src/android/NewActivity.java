@@ -40,7 +40,7 @@ public class NewActivity extends Activity {
                 @Override
                 public void onSuccess(ZyResponse zyResponse) {
                     Log.i(TAG, "Success");
-                    Bitmap imgFP;
+                    byte[] imgFP;
 
                     imgFP = zyResponse.wsq;
 
