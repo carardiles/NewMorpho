@@ -11,7 +11,7 @@ repositories{
 
 
 dependencies {
-   implementation 'zymorpholib_v1-release@aar'
+   compile(name:'zymorpholib_v1-release@aar' type:'aar')
 }
 
 

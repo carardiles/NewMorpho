@@ -30,6 +30,8 @@ public class Huellero extends CordovaPlugin {
         super.initialize(cordova, webView);
     }
 
+    
+
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext newCallbackContext) {
         Log.i(TAG, "execute");
@@ -61,14 +63,12 @@ public class Huellero extends CordovaPlugin {
 
                 Log.i(TAG, "Activity Result OK");
 
-                Bitmap resultBm = data.getParcelableExtra("result");
+                byte[] resultBm = data.getParcelableExtra("result");
 
                 Log.i(TAG, "converting to B64");               
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();  
-                resultBm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byteArray = byteArrayOutputStream .toByteArray();   
+                
                     
-                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                String encoded = encode(resultBm);
 
                 if(encoded != null){
                     Log.i(TAG, "got b64");
@@ -93,6 +93,43 @@ public class Huellero extends CordovaPlugin {
                 callbackContext.sendPluginResult(pluginResult);
             }
         }
-    }//onActivityResult
+    }
+
+    private String encode(byte[] d) {
+        if (d == null) {
+            return null;
+        }
+        int idx;
+        byte[] data = new byte[(d.length + 2)];
+        System.arraycopy(d, 0, data, 0, d.length);
+        byte[] dest = new byte[((data.length / 3) * 4)];
+        int sidx = 0;
+        int didx = 0;
+        while (sidx < d.length) {
+            dest[didx] = (byte) ((data[sidx] >>> 2) & 63);
+            dest[didx + 1] = (byte) (((data[sidx + 1] >>> 4) & 15) | ((data[sidx] << 4) & 63));
+            dest[didx + 2] = (byte) (((data[sidx + 2] >>> 6) & 3) | ((data[sidx + 1] << 2) & 63));
+            dest[didx + 3] = (byte) (data[sidx + 2] & 63);
+            sidx += 3;
+            didx += 4;
+        }
+        for (idx = 0; idx < dest.length; idx++) {
+            if (dest[idx] < (byte) 26) {
+                dest[idx] = (byte) (dest[idx] + 65);
+            } else if (dest[idx] < (byte) 52) {
+                dest[idx] = (byte) ((dest[idx] + 97) - 26);
+            } else if (dest[idx] < (byte) 62) {
+                dest[idx] = (byte) ((dest[idx] + 48) - 52);
+            } else if (dest[idx] < (byte) 63) {
+                dest[idx] = (byte) 43;
+            } else {
+                dest[idx] = (byte) 47;
+            }
+        }
+        for (idx = dest.length - 1; idx > (d.length * 4) / 3; idx--) {
+            dest[idx] = (byte) 61;
+        }
+        return new String(dest);
+    }
 
 }

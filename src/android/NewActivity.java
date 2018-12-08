@@ -42,7 +42,7 @@ public class NewActivity extends Activity {
                     Log.i(TAG, "Success");
                     Bitmap imgFP;
 
-                    imgFP = zyResponse.bm;
+                    imgFP = zyResponse.wsq;
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("result",imgFP);
