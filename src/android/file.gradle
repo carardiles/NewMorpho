@@ -2,16 +2,17 @@ repositories{
   google()
   jcenter()
   flatDir {
-     dirs 'src/main/libs'
-  }
-  flatDir{
+      dirs 'src/main/libs'
+   }
+   
+  flatDir {
     dirs 'libs'
   }
 }
 
 
 dependencies {
-   compile(name:'zymorpholib_v1-release@aar' type:'aar')
+   implementation(name:'zymorpholib_v1-release', ext:'aar')
 }
 
 
