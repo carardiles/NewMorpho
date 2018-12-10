@@ -63,7 +63,7 @@ public class Huellero extends CordovaPlugin {
 
                 Log.i(TAG, "Activity Result OK");
 
-                byte[] resultBm = data.getParcelableExtra("result");
+                byte[] resultBm = data.getByteArrayExtra("result");
 
                 Log.i(TAG, "converting to B64");               
                 
